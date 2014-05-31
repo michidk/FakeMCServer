@@ -66,7 +66,7 @@ public class FileHelper
         String line;
         StringBuilder stringBuilder = new StringBuilder();
 
-        BufferedReader reader;
+        BufferedReader reader = null;
         try
         {
             reader = new BufferedReader(new FileReader(file));
@@ -79,6 +79,19 @@ public class FileHelper
         catch (IOException e)
         {
             e.printStackTrace();
+        }
+        finally
+        {
+            try
+            {
+                if (reader != null) {
+                    reader.close();
+                }
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
 
         return stringBuilder.toString();
