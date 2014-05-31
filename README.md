@@ -11,7 +11,7 @@ A Fake MinecraftServer, that shows the following messages:
 * kickmessage<br />
 You can customize all messages.
 
-Compile the .jar or download the compiled version here: https://mega.co.nz/#!6RMk2CrY!aJRV79SVxyh3WwA1MdFeS_QLovMOxYtW_TfV0SzdxeA<br />
+Compile the .jar or download the compiled version here: https://mega.co.nz/#!mN9GEBIK!0_v-LQDCLN9HnqEuSe3gk9AhV-TP6pfoctU3lpS9xMc<br />
 the open cmd, goto the folder that contains the file (with cd), and run it with:<br />
 java -jar FakeMCServer.jar -ip localhost -port 25565<br />
 (you can change the ip and port)<br />
