@@ -1,6 +1,7 @@
 package me.michidk.FakeMCServer;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.Collections;
@@ -79,96 +80,85 @@ public class Main
         File serverIcon = new File(iconPath);
         if (!serverIcon.exists())
         {
-            log.warning("no '" + iconPath + "' found");
+            log.warning("icon file '" + iconPath + "' not found");
+            icon = null;
         }
         else
         {
             String base64 = FileHelper.decodeBase64(serverIcon);
-            if (base64 == null || base64 == "")
+            if (base64 == null || base64.isEmpty())
             {
                 log.warning("something went wrong while decoding '" + iconPath + "'");
+                icon = null;
             }
             else
             {
                 icon = "data:image/png;base64," + base64;
-                log.info("'" + iconPath + "' successfully loaded");
+                log.info("icon file '" + iconPath + "' successfully loaded");
             }
         }
 
         //load version
-        File verTextFile = new File("version.txt");
-        if (!verTextFile.exists())
         {
-            log.warning("no 'version.txt' found");
+            final String str = getFileString("version.txt");
+            verText = (str == null ? null : parseColors(str));
         }
-        else
-        {
-            verText = parseColors(FileHelper.stringFromFile(verTextFile));
-
-            log.info("'version.txt' successfully loaded");
-
-        }
-
         //load motd
-        File motdFile = new File("motd.txt");
-        if (!motdFile.exists())
         {
-            log.warning("no 'motd.txt' found");
+            final String str = getFileString("motd.txt");
+            motd = (str == null ? null : parseColors(motd));
         }
-        else
-        {
-            motd = parseColors(FileHelper.stringFromFile(motdFile));
-
-            log.info("'motd.txt' successfully loaded");
-
-        }
-
         //kick message
-        File kickMessageFile = new File("kickmessage.txt");
-        if (!kickMessageFile.exists())
         {
-            log.warning("no 'kickmesssage.txt' found");
+            final String str = getFileString("kickmessage.txt");
+            kickMessage = (str == null ? null : parseColors(str));
         }
-        else
-        {
-            kickMessage = parseColors(FileHelper.stringFromFile(kickMessageFile));
-
-            log.info("'kickmessage.txt' successfully loaded");
-
-        }
-
         //players
-        File playersFile = new File("players.txt");
-        if (!playersFile.exists())
         {
-            log.warning("no 'players.txt' found");
+            final String str = getFileString("players.txt");
+            players = (str == null ? null : parseColors(str));
         }
-        else
-        {
-            players = parseColors(FileHelper.stringFromFile(playersFile));
-            log.info("'players.txt' successfully loaded");
-        }
-
         //maxplayers
-        File maxPlayersFile = new File("maxplayers.txt");
-        if (!maxPlayersFile.exists())
         {
-            log.warning("no 'maxplayers.txt' found");
-        }
-        else
-        {
-            try
-            {
-                maxPlayers = Integer.parseInt(FileHelper.stringFromFile(maxPlayersFile));
-                log.info("'maxplayers.txt successfully loaded'");
+            final String str = getFileString("maxplayers.txt");
+            try {
+                maxPlayers = (str == null ? null : Integer.parseInt(str));
             }
             catch (NumberFormatException e)
             {
-                log.warning("invalid 'maxplayers.txt'");
+                log.warning("invalid number in 'maxplayers.txt'");
                 maxPlayers = null;
             }
         }
 
+    }
+
+    private static String getFileString(final String fileName)
+    {
+        final File file = new File(fileName);
+        if(!file.isFile()) {
+            try {
+                file.createNewFile();
+                log.warning("created empty file '"+fileName+"'");
+            }
+            catch (IOException e)
+            {
+                log.warning("file '"+fileName+"' not found");
+                e.printStackTrace();
+            }
+            return null;
+        }
+        if(!file.canRead()) {
+            log.warning("file '"+fileName+"' not readable");
+            return null;
+        }
+        final String str = FileHelper.stringFromFile(file);
+        if(str == null || str.isEmpty()) {
+            log.warning("file '"+fileName+"' is empty");
+            return null;
+        }
+        log.info("file '"+fileName+"' successfully loaded");
+        return str;
     }
 
     public static void addShutdownHook()
