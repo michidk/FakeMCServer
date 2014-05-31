@@ -17,7 +17,7 @@ idea/
 /ida
 ida/
 dependency-reduced-pom.xml
-pom.xml
+# pom.xml
 
 #################
 ## Eclipse
