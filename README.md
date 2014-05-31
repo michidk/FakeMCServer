@@ -16,4 +16,9 @@ the open cmd, goto the folder that contains the file (with cd), and run it with:
 java -jar FakeMCServer.jar -ip localhost -port 25565<br />
 (you can change the ip and port)<br />
 <br />
+
+you can use color codes with '&' (for example "&4I'm Red!")<br />
+you can make new lines with '\n' for multiline motd, the playerlist and the kickmessage<br />
+you can use unicode: if you want to use special charakters, the convert to JavaScript Escapes (http://rishida.net/tools/conversion/)<br />
+
 Have fun ;)
