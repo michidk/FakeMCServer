@@ -40,6 +40,7 @@ public class ResponderThread extends Thread
         {
             while (socket.isConnected() && enabled)
             {
+                @SuppressWarnings("unused")
                 int length = ByteBufUtils.readVarInt(in);
                 int id = ByteBufUtils.readVarInt(in);
 
@@ -64,6 +65,7 @@ public class ResponderThread extends Thread
                 }
                 else if (id == 0 && !showMotd)
                 {
+                    @SuppressWarnings("unused")
                     int version = ByteBufUtils.readVarInt(in);
                     String ip = ByteBufUtils.readUTF8(in);
                     int port = in.readUnsignedShort();
