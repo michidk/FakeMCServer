@@ -42,7 +42,7 @@ public class Main
 
         log.info("     ==> FakeMCServer " + version + " by michidk <==");
         log.info("Github: https://github.com/michidk/FakeMCServer");
-        log.info("YouTube: https://www.youtube.com/user/CodeBukki");
+        log.info("YouTube: https://www.youtube.com/user/CodeBukkit");
         log.info("-----------------------------------------------");
 
 
@@ -84,7 +84,7 @@ public class Main
         else
         {
             String base64 = FileHelper.decodeBase64(serverIcon);
-            if (base64 == null)
+            if (base64 == null || base64 == "")
             {
                 log.warning("something went wrong while decoding '" + iconPath + "'");
             }
@@ -104,15 +104,9 @@ public class Main
         else
         {
             verText = parseColors(FileHelper.stringFromFile(verTextFile));
-            if (verText.length() > 30)
-            {
-                verText = null;
-                log.warning("version must be shorter than 30 characters");
-            }
-            else
-            {
-                log.info("'version.txt' successfully loaded");
-            }
+
+            log.info("'version.txt' successfully loaded");
+
         }
 
         //load motd
@@ -124,15 +118,9 @@ public class Main
         else
         {
             motd = parseColors(FileHelper.stringFromFile(motdFile));
-            if (motd.length() > 60)
-            {
-                motd = null;
-                log.warning("motd must be shorter than 30 characters");
-            }
-            else
-            {
-                log.info("'motd.txt' successfully loaded");
-            }
+
+            log.info("'motd.txt' successfully loaded");
+
         }
 
         //kick message
@@ -144,15 +132,9 @@ public class Main
         else
         {
             kickMessage = parseColors(FileHelper.stringFromFile(kickMessageFile));
-            if (kickMessage.length() > 80)
-            {
-                kickMessage = null;
-                log.warning("kickmessage must be shorter than 30 characters");
-            }
-            else
-            {
-                log.info("'kickmessage.txt' successfully loaded");
-            }
+
+            log.info("'kickmessage.txt' successfully loaded");
+
         }
 
         //players
@@ -182,7 +164,7 @@ public class Main
             }
             catch (NumberFormatException e)
             {
-                log.warning("ínvalid 'maxplayers.txt'");
+                log.warning("invalid 'maxplayers.txt'");
                 maxPlayers = null;
             }
         }
