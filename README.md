@@ -1,7 +1,7 @@
 FakeMCServer
 ============
 
-![image](http://www.directupload.net/file/d/3639/5e5v7gig_png.htm)
+![Alt text](http://image-upload.de/image/fJMilM/4fe71c6994.png)
 
 A Fake MinecraftServer, that shows the fullowing messages:
 * motd
