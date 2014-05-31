@@ -25,7 +25,7 @@ public class Main
     public static String icon;
     public static String verText;
     public static String motd;
-    public static String players = "asdas";
+    public static String players = "\u0000";
     public static Integer maxPlayers;
     public static String kickMessage = "\u0000";
 
