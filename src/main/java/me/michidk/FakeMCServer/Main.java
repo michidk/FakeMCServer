@@ -40,9 +40,9 @@ public class Main
         log.addHandler(handler);
         log.setUseParentHandlers(false);
 
-        log.info("     ==> FakeMCServer " + version + " by michidk <==");
+        log.info("==> FakeMCServer " + version + " by xxmicloxx and michidk <==");
         log.info("Github: https://github.com/michidk/FakeMCServer");
-        log.info("YouTube: https://www.youtube.com/user/CodeBukkit");
+        log.info("YouTube: https://www.youtube.com/CodeBukkit");
         log.info("-----------------------------------------------");
 
 
