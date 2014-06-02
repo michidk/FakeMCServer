@@ -2,6 +2,7 @@ package me.michidk.FakeMCServer;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.UUID;
 
 /**
  * @author michidk
@@ -43,7 +44,7 @@ public class ResponderThread extends Thread
                 @SuppressWarnings("unused")
                 int length = ByteBufUtils.readVarInt(in);
                 int id = ByteBufUtils.readVarInt(in);
-
+                System.out.println(length+":"+id);
 
                 if (id == 0 && showMotd)
                 {
@@ -71,7 +72,9 @@ public class ResponderThread extends Thread
                     int port = in.readUnsignedShort();
                     int nextState = ByteBufUtils.readVarInt(in);
 
+                    System.out.println(version + ":" + ip + ":" + port + ":" + nextState);
 
+                    System.out.println("State: " + nextState);
                     if (nextState == 1)
                     {
                         showMotd = true;
@@ -171,11 +174,11 @@ public class ResponderThread extends Thread
 
         if (Main.players == null || Main.players == "")
         {
-            sb.append(" \"sample\":[ {\"name\":\"\u0000\", \"id\":\"\"} ] },");
+            sb.append(" \"sample\":[ {\"name\":\"\u0000\", \"id\":\"" + UUID.randomUUID().toString() + "\"} ] },");
         }
         else
         {
-            sb.append(" \"sample\":[ {\"name\":\"" + Main.players + "\", \"id\":\"\"} ] },");
+            sb.append(" \"sample\":[ {\"name\":\"" + Main.players + "\", \"id\":\"" + UUID.randomUUID().toString() + "\"} ] },");
         }
 
 
