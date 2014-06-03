@@ -160,20 +160,17 @@ public class Main
         }
 
         //load version
-        {
-            final String str = getFileString("version.txt");
-            verText = (str == null ? null : parseColors(str));
-        }
+        verText = parseColors(
+            getFileString("version.txt")
+        );
         //load motd
-        {
-            final String str = getFileString("motd.txt");
-            motd = (str == null ? null : parseColors(motd));
-        }
+        motd = parseColors(
+            getFileString("motd.txt")
+        );
         //kick message
-        {
-            final String str = getFileString("kickmessage.txt");
-            kickMessage = (str == null ? null : parseColors(str));
-        }
+        kickMessage = parseColors(
+            getFileString("kickmessage.txt")
+        );
         //players
         {
             final String str = getFileString("players.txt");
