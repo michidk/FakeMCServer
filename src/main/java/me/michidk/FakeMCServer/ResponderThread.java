@@ -11,22 +11,22 @@ import java.util.UUID;
 public class ResponderThread extends Thread
 {
 
-    private Socket socket;
-    private boolean enabled;
-    private DataInputStream in;
-    private DataOutputStream out;
+    private final Socket socket;
+    private volatile boolean enabled = false;
+    private final DataInputStream in;
+    private final DataOutputStream out;
 
-    private static String motd = "";
+    private static volatile String motd = null;
 
-    public ResponderThread(Socket socket) throws IOException
+    public ResponderThread(final Socket socket) throws IOException
     {
+        if(socket == null) throw new NullPointerException();
         this.socket = socket;
 
         in = new DataInputStream(socket.getInputStream());
         out = new DataOutputStream(socket.getOutputStream());
 
         socket.setSoTimeout(3000); //3s
-
 
         motd = createMotd();
         enabled = true;
@@ -41,9 +41,8 @@ public class ResponderThread extends Thread
         {
             while (socket.isConnected() && enabled)
             {
-                @SuppressWarnings("unused")
-                int length = ByteBufUtils.readVarInt(in);
-                int id = ByteBufUtils.readVarInt(in);
+                final int length = ByteBufUtils.readVarInt(in);
+                final int id = ByteBufUtils.readVarInt(in);
                 System.out.println(length+":"+id);
 
                 if (id == 0 && showMotd)
@@ -66,11 +65,10 @@ public class ResponderThread extends Thread
                 }
                 else if (id == 0 && !showMotd)
                 {
-                    @SuppressWarnings("unused")
-                    int version = ByteBufUtils.readVarInt(in);
-                    String ip = ByteBufUtils.readUTF8(in);
-                    int port = in.readUnsignedShort();
-                    int nextState = ByteBufUtils.readVarInt(in);
+                    final int version = ByteBufUtils.readVarInt(in);
+                    final String ip = ByteBufUtils.readUTF8(in);
+                    final int port = in.readUnsignedShort();
+                    final int nextState = ByteBufUtils.readVarInt(in);
 
                     System.out.println(version + ":" + ip + ":" + port + ":" + nextState);
 
@@ -82,11 +80,11 @@ public class ResponderThread extends Thread
                     }
                     else
                     {
-                        if (Main.kickMessage == null || Main.kickMessage == "")
-                        {
-                            Main.log.warning("kickmessage is not initialized");
-                            return;
-                        }
+//                        if (Main.kickMessage == null || Main.kickMessage.isEmpty())
+//                        {
+//                            Main.log.warning("kickmessage is not initialized");
+//                            return;
+//                        }
 
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         DataOutputStream dos = new DataOutputStream(baos);
@@ -105,7 +103,7 @@ public class ResponderThread extends Thread
                 }
                 else if (id == 1)
                 {
-                    long time = in.readLong();
+                    final long time = in.readLong();
 
                     ByteBufUtils.writeVarInt(out, 9);
                     ByteBufUtils.writeVarInt(out, 1);
@@ -151,7 +149,7 @@ public class ResponderThread extends Thread
 
     private String createMotd()
     {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         //i know, thats a cheapy way.. but i have a better overview
         if (Main.verText == null || Main.version == "")
