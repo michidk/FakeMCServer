@@ -36,39 +36,100 @@ public class Main
 
     public static void main(final String[] args)
     {
-        handler.setFormatter(new LogFormatter());
-        log.addHandler(handler);
-        log.setUseParentHandlers(false);
 
-        log.info("==> FakeMCServer " + version + " by xxmicloxx and michidk <==");
-        log.info("Github: https://github.com/michidk/FakeMCServer");
-        log.info("YouTube: https://www.youtube.com/CodeBukkit");
-        log.info("-----------------------------------------------");
-
-
-        //parse args
-        LinkedList<String> arguments = new LinkedList<String>( );
-        Collections.addAll(arguments, args);
-
-        while(!arguments.isEmpty())
+        // parse args
+        for(int index = 0; index < args.length; index++)
         {
-            String arg = (String) arguments.pop();
-
-            if (arg.equalsIgnoreCase("-ip"))
+            switch(args[index].toLowerCase())
             {
-                ip = (String) arguments.pop();
-            }
-            else if (arg.equalsIgnoreCase("-port"))
-            {
-                port = Integer.parseInt((String) arguments.pop());
+            case "--help":
+                display_help();
+                System.exit(0);
+                return;
+            case "-v":
+            case "--version":
+                display_version();
+                System.exit(0);
+                return;
+            case "-h":
+            case "--host":
+                index++;
+                host = args[index];
+                if("*".equals(host) || "any".equalsIgnoreCase(host))
+                    host = "*";
+                continue;
+            case "-p":
+            case "--port":
+                index++;
+                try
+                {
+                    port = Integer.parseInt(args[index]);
+                }
+                catch (NumberFormatException e)
+                {
+                    System.out.println("invalid port argument");
+                    e.printStackTrace();
+                    System.exit(1);
+                    return;
+                }
+                continue;
+            default:
+                System.out.println();
+                System.out.println("invalid option: "+args[index]);
+                System.out.println();
+                System.exit(1);
+                return;
             }
         }
 
         final ConsoleHandler handler = new ConsoleHandler();
+        handler.setFormatter(new LogFormatter());
+        log.addHandler(handler);
+        log.setUseParentHandlers(false);
+
         loadResources();
         addShutdownHook();
         startServer();
 
+    }
+
+    public static void display_header()
+    {
+        System.out.println("==> FakeMCServer " + version + " by xxmicloxx and michidk <==");
+        System.out.println("Github: https://github.com/michidk/FakeMCServer");
+        System.out.println("YouTube: https://www.youtube.com/CodeBukkit");
+        System.out.println("-----------------------------------------------");
+        System.out.println();
+    }
+
+    public static void display_version()
+    {
+        display_header();
+    }
+
+    public static void display_help()
+    {
+        display_header();
+        // get jar self file name
+        final String jarSelfStr;
+        {
+            final String str = Main.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+            final int pos = str.lastIndexOf('/');
+            if(pos == -1)
+                jarSelfStr = str;
+            else
+                jarSelfStr = str.substring(pos + 1);
+        }
+        System.out.println("Usage:");
+        System.out.println(" java -jar "+jarSelfStr+" [options]");
+        System.out.println();
+        System.out.println("Options:");
+        System.out.println("  -h, --host <hostname/ip>  Host to listen on");
+        System.out.println("  -p, --port <port>         Port to listen on");
+        System.out.println();
+        System.out.println(" --help         display this help and exit");
+        System.out.println(" -v, --version  output version information and exit");
+        System.out.println();
     }
 
     public static void loadResources()
