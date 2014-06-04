@@ -20,6 +20,7 @@ public class Main
     public static final String version = "v1.0";
     public static final Logger log = Logger.getLogger("FakeMCServer");
 
+    private static volatile boolean debug = false;
 
     public static          String   host        = null;
     public static          Integer  port        = null;
@@ -46,6 +47,11 @@ public class Main
                 display_help();
                 System.exit(0);
                 return;
+            case "--debug":
+            case "-d":
+                debug = true;
+                System.out.println("debug mode enabled");
+                break;
             case "-v":
             case "--version":
                 display_version();
@@ -57,7 +63,7 @@ public class Main
                 host = args[index];
                 if("*".equals(host) || "any".equalsIgnoreCase(host))
                     host = "*";
-                continue;
+                break;
             case "-p":
             case "--port":
                 index++;
@@ -72,7 +78,7 @@ public class Main
                     System.exit(1);
                     return;
                 }
-                continue;
+                break;
             default:
                 System.out.println();
                 System.out.println("invalid option: "+args[index]);
@@ -282,6 +288,19 @@ public class Main
     {
         if(message == null) return null;
         return colorPattern.matcher(message).replaceAll("\u00a7$1");
+    }
+
+    public static void debug()
+    {
+        debug(null);
+    }
+    public static void debug(final String msg)
+    {
+        if(!debug) return;
+        if(msg == null || msg.isEmpty())
+            System.out.println();
+        else
+            System.out.println(msg);
     }
 
 }

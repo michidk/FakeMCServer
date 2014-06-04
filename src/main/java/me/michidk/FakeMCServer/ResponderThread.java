@@ -43,9 +43,9 @@ public class ResponderThread extends Thread
             {
                 final int length = ByteBufUtils.readVarInt(in);
                 final int id = ByteBufUtils.readVarInt(in);
-                System.out.println(length+":"+id);
 
                 if (id == 0 && showMotd)
+                Main.debug("length:"+length+" id:"+id);
                 {
                     if (motd == null || motd == "")
                     {
@@ -70,7 +70,7 @@ public class ResponderThread extends Thread
                     final int port = in.readUnsignedShort();
                     final int nextState = ByteBufUtils.readVarInt(in);
 
-                    System.out.println(version + ":" + ip + ":" + port + ":" + nextState);
+                    Main.debug("protocol:"+protocol+" ip:"+ip+" port:"+port+" state:"+state);
 
                     System.out.println("State: " + nextState);
                     if (nextState == 1)
