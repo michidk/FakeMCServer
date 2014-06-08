@@ -242,9 +242,20 @@ public class Main
 
         try
         {
-            InetAddress adress = (ip == null ? InetAddress.getLocalHost():InetAddress.getByName(ip));
-            server = new ServerSocket(port, 10, adress);
-            log.info("server started on " + adress.getHostAddress()+ ":" + port);
+
+            final String hst = (host == null || host.isEmpty()) ? "*" : host;
+            final int prt = (port == null) ? 25565 : port;
+            if("*".equals(hst))
+            {
+                server = new ServerSocket(prt, SOCKET_BACKLOG);
+                log.info("server started on *:"+Integer.toString(prt));
+            }
+            else
+            {
+                final InetAddress address = InetAddress.getByName(hst);
+                server = new ServerSocket(prt, SOCKET_BACKLOG, address);
+                log.info("server started on "+address.getHostAddress()+":"+Integer.toString(prt));
+            }
 
             while(!server.isClosed())
             {
