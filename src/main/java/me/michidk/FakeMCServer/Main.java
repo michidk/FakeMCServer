@@ -180,7 +180,17 @@ public class Main
         //players
         {
             final String str = getFileString("players.txt");
-            players = (str == null ? null : parseColors(str));
+            if(str != null)
+            {
+                final List<String> list = new ArrayList<String>();
+                for(final String player : str.replace("\r", ",").replace("\n", ",").split(","))
+                {
+                    if(player == null || player.isEmpty())
+                        continue;
+                    list.add(parseColors(player));
+                }
+                players = list.toArray(new String[0]);
+            }
         }
         //maxplayers
         {

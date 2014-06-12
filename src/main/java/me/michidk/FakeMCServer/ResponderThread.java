@@ -161,24 +161,41 @@ public class ResponderThread extends Thread
             sb.append("{ \"version\": { \"name\": \"" + Main.verText + "\", \"protocol\": 0 },");
         }
 
+        // max players
         if (Main.maxPlayers == null)
         {
-            sb.append(" \"players\": { \"max\": " + 0 + ", \"online\": 0,");
+
+            sb.append(" \"players\": { \"max\": 0, \"online\": 0,");
+            sb.append(" \"sample\":[ {\"name\":\"\u0000\", \"id\":\"\u0000\"} ] },");
+
         }
         else
         {
-            sb.append(" \"players\": { \"max\": " + Main.maxPlayers + ", \"online\": 0,");
-        }
+            sb.append(" \"players\": { \"max\": ").append(Main.maxPlayers).append(", \"online\": ");
 
-        if (Main.players == null || Main.players == "")
-        {
-            sb.append(" \"sample\":[ {\"name\":\"\u0000\", \"id\":\"" + UUID.randomUUID().toString() + "\"} ] },");
+            // players
+            if (Main.players == null || Main.players.length == 0)
+            {
+                sb.append("0, \"sample\":[ {\"name\":\"\u0000\", \"id\":\"\u0000\"} ] },");
+            }
+            else
+            {
+                sb.append(Main.players.length).append(", \"sample\":[");
+                int count = 0;
+                for(final String player : Main.players)
+                {
+                    if(count != 0)
+                        sb.append(", ");
+                    count++;
+// this can be replaced with a function to fetch and cache the real uuid's
+final String uuid = UUID.randomUUID().toString();
+                    sb.append(" {\"name\":\"").append(player).append("\", \"id\":\"" + uuid + "\"}");
+                    if(count == 10 && Main.players.length > 10)
+                        break;
+                }
+                sb.append(" ] },");
+            }
         }
-        else
-        {
-            sb.append(" \"sample\":[ {\"name\":\"" + Main.players + "\", \"id\":\"" + UUID.randomUUID().toString() + "\"} ] },");
-        }
-
 
         if (Main.motd == null || Main.motd == "")
         {
