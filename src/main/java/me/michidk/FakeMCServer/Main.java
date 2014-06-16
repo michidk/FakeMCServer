@@ -69,7 +69,7 @@ public class Main
                 index++;
                 try
                 {
-                    port = Integer.parseInt(args[index]);
+                    port = new Integer(Integer.parseInt(args[index]));
                 }
                 catch (NumberFormatException e)
                 {
@@ -196,7 +196,7 @@ public class Main
         {
             final String str = getFileString("maxplayers.txt");
             try {
-                maxPlayers = (str == null ? null : Integer.parseInt(str));
+                maxPlayers = (str == null ? null : new Integer(Integer.parseInt(str)));
             }
             catch (NumberFormatException e)
             {
@@ -239,6 +239,7 @@ public class Main
     {
         Runtime.getRuntime().addShutdownHook(new Thread()
         {
+            @Override
             public void run()
             {
                 stopServer();
@@ -254,7 +255,7 @@ public class Main
         {
 
             final String hst = (host == null || host.isEmpty()) ? "*" : host;
-            final int prt = (port == null) ? 25565 : port;
+            final int prt = (port == null) ? 25565 : port.intValue();
             if("*".equals(hst))
             {
                 server = new ServerSocket(prt, SOCKET_BACKLOG);
@@ -275,7 +276,7 @@ public class Main
         }
         catch(Exception e)
         {
-            log.warning("failed to start the server on " + ip + ":" + port);
+            log.warning("failed to start the server on " + host + ":" + port);
             log.severe("error: " + e.getMessage());
 
             System.exit(0);

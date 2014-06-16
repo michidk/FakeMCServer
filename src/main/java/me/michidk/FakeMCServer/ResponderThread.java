@@ -1,6 +1,10 @@
 package me.michidk.FakeMCServer;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.UUID;
 
@@ -23,13 +27,13 @@ public class ResponderThread extends Thread
         if(socket == null) throw new NullPointerException();
         this.socket = socket;
 
-        in = new DataInputStream(socket.getInputStream());
-        out = new DataOutputStream(socket.getOutputStream());
+        this.in = new DataInputStream(socket.getInputStream());
+        this.out = new DataOutputStream(socket.getOutputStream());
 
         socket.setSoTimeout(3000); //3s
 
         motd = createMotd();
-        enabled = true;
+        this.enabled = true;
     }
 
     @Override
@@ -39,13 +43,14 @@ public class ResponderThread extends Thread
 
         try
         {
-            while (socket.isConnected() && enabled)
+            while (this.socket.isConnected() && this.enabled)
             {
-                final int length = ByteBufUtils.readVarInt(in);
-                final int id = ByteBufUtils.readVarInt(in);
+                final int length   = ByteBufUtils.readVarInt(this.in);
+                final int packetId = ByteBufUtils.readVarInt(this.in);
 
-                if (id == 0 && showMotd)
-                Main.debug("length:"+length+" id:"+id);
+                Main.debug("length: "+length+"  packet id: "+packetId);
+
+                if(packetId == 0)
                 {
                     if (motd == null || motd == "")
                     {
@@ -58,19 +63,19 @@ public class ResponderThread extends Thread
 
                     ByteBufUtils.writeVarInt(dos, 0);
                     ByteBufUtils.writeUTF8(dos, motd);
-                    ByteBufUtils.writeVarInt(out, baos.size());
+                    ByteBufUtils.writeVarInt(this.out, baos.size());
 
-                    out.write(baos.toByteArray());
-                    out.flush();
+                    this.out.write(baos.toByteArray());
+                    this.out.flush();
                 }
-                else if (id == 0 && !showMotd)
+                else if (packetId == 0 && !showMotd)
                 {
-                    final int version = ByteBufUtils.readVarInt(in);
-                    final String ip = ByteBufUtils.readUTF8(in);
-                    final int port = in.readUnsignedShort();
-                    final int nextState = ByteBufUtils.readVarInt(in);
+                    final int version   = ByteBufUtils.readVarInt(this.in);
+                    final String ip     = ByteBufUtils.readUTF8(this.in);
+                    final int port      = this.in.readUnsignedShort();
+                    final int nextState = ByteBufUtils.readVarInt(this.in);
 
-                    Main.debug("protocol:"+protocol+" ip:"+ip+" port:"+port+" state:"+state);
+                    Main.debug("protocol:"+protocol+" ip:"+ip+" port:"+port+" state:"+nextState);
 
                     System.out.println("State: " + nextState);
                     if (nextState == 1)
@@ -91,25 +96,25 @@ public class ResponderThread extends Thread
 
                         ByteBufUtils.writeVarInt(dos, 0);
                         ByteBufUtils.writeUTF8(dos, "{text:\"" + Main.kickMessage + "\", color: white}");
-                        ByteBufUtils.writeVarInt(out, baos.size());
+                        ByteBufUtils.writeVarInt(this.out, baos.size());
 
-                        out.write(baos.toByteArray());
-                        out.flush();
+                        this.out.write(baos.toByteArray());
+                        this.out.flush();
 
                         closeSocket();
 
                         Main.log.info("kick: " + ip + ":" + port);
                     }
                 }
-                else if (id == 1)
+                else if (packetId == 1)
                 {
-                    final long time = in.readLong();
+                    final long time = this.in.readLong();
 
-                    ByteBufUtils.writeVarInt(out, 9);
-                    ByteBufUtils.writeVarInt(out, 1);
+                    ByteBufUtils.writeVarInt(this.out, 9);
+                    ByteBufUtils.writeVarInt(this.out, 1);
 
-                    out.writeLong(time);
-                    out.flush();
+                    this.out.writeLong(time);
+                    this.out.flush();
                 }
 
             }
@@ -131,13 +136,13 @@ public class ResponderThread extends Thread
     private final void closeSocket()
     {
 
-        enabled = false;
+        this.enabled = false;
 
         try
         {
-            in.close();
-            out.close();
-            socket.close();
+            this.in.close();
+            this.out.close();
+            this.socket.close();
         }
         catch (Exception e)
         {
