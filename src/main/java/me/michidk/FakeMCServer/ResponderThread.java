@@ -15,7 +15,9 @@ import java.util.UUID;
 public class ResponderThread extends Thread
 {
 
+    private volatile Thread thread = null;
     private final Socket socket;
+    private final String remoteHost;
     private volatile boolean enabled = false;
     private final DataInputStream in;
     private final DataOutputStream out;
@@ -26,6 +28,7 @@ public class ResponderThread extends Thread
     {
         if(socket == null) throw new NullPointerException();
         this.socket = socket;
+        this.remoteHost = socket.getRemoteSocketAddress().toString().substring(1);
 
         this.in = new DataInputStream(socket.getInputStream());
         this.out = new DataOutputStream(socket.getOutputStream());
@@ -39,6 +42,7 @@ public class ResponderThread extends Thread
     @Override
     public void run()
     {
+        this.thread = Thread.currentThread();
         boolean showMotd = false;
 
         try
@@ -132,6 +136,7 @@ public class ResponderThread extends Thread
         finally
         {
             closeSocket();
+            this.thread = null;
         }
     }
 
@@ -141,6 +146,8 @@ public class ResponderThread extends Thread
         safeClose(this.in);
         safeClose(this.out);
         safeClose(this.socket);
+        if(this.thread != null)
+            this.thread.interrupt();
     }
     public static void safeClose(final Closeable obj)
     {
