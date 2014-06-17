@@ -143,20 +143,11 @@ public class ResponderThread extends Thread
     private final void closeSocket()
     {
         this.enabled = false;
-        safeClose(this.in);
-        safeClose(this.out);
-        safeClose(this.socket);
+        Main.safeClose(this.in);
+        Main.safeClose(this.out);
+        Main.safeClose(this.socket);
         if(this.thread != null)
             this.thread.interrupt();
-    }
-    public static void safeClose(final Closeable obj)
-    {
-        if(obj == null) return;
-        try
-        {
-            obj.close();
-        }
-        catch (Exception ignore) {}
     }
 
     }

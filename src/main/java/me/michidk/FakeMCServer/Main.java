@@ -1,5 +1,6 @@
 package me.michidk.FakeMCServer;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -21,6 +22,7 @@ public class Main
     public static final Logger log = Logger.getLogger("FakeMCServer");
 
     private static volatile boolean debug = false;
+    private static volatile boolean stopping = false;
 
     public static          String   host        = null;
     public static          Integer  port        = null;
@@ -249,6 +251,7 @@ public class Main
 
     public static void startServer()
     {
+        if(stopping) throw new IllegalAccessError();
         log.info("starting server...");
 
         try
@@ -276,32 +279,28 @@ public class Main
         }
         catch(Exception e)
         {
-            log.warning("failed to start the server on " + host + ":" + port);
-            log.severe("error: " + e.getMessage());
-
-            System.exit(0);
+            if(!stopping)
+            {
+                log.warning("failed to start the server on "+host+":"+port);
+                log.severe("error: "+e.getMessage());
+                e.printStackTrace();
+                System.exit(0);
+            }
         }
-
-        stopServer();
+        finally
+        {
+            stopServer();
+        }
 
     }
 
     public static void stopServer()
     {
+        stopping = true;
         if (server == null) return;
         log.info("stopping server...");
-
-
-        try
-        {
-            server.close();
-        }
-        catch(Exception e)
-        {
-            log.severe("failed to stop server: " + e.getMessage());
-            return;
-        }
-
+        safeClose(server);
+        server = null;
         log.info("server stopped");
     }
 
@@ -323,6 +322,16 @@ public class Main
             System.out.println();
         else
             System.out.println(msg);
+    }
+
+    public static void safeClose(final Closeable obj)
+    {
+        if(obj == null) return;
+        try
+        {
+            obj.close();
+        }
+        catch (Exception ignore) {}
     }
 
 }
