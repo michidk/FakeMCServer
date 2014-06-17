@@ -129,26 +129,28 @@ public class ResponderThread extends Thread
         {
             e.printStackTrace();
         }
-
-
+        finally
+        {
+            closeSocket();
+        }
     }
 
     private final void closeSocket()
     {
-
         this.enabled = false;
-
+        safeClose(this.in);
+        safeClose(this.out);
+        safeClose(this.socket);
+    }
+    public static void safeClose(final Closeable obj)
+    {
+        if(obj == null) return;
         try
         {
-            this.in.close();
-            this.out.close();
-            this.socket.close();
+            obj.close();
         }
-        catch (Exception e)
-        {
-            Main.log.severe("failed to close socket: " + e.getMessage());
-        }
-        Thread.currentThread().interrupt();
+        catch (Exception ignore) {}
+    }
 
     }
 
