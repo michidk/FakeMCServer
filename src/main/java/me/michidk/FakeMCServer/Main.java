@@ -24,6 +24,8 @@ public class Main
     private static volatile boolean debug = false;
     private static volatile boolean stopping = false;
 
+    public static final int SOCKET_BACKLOG = 5;
+
     public static          String   host        = null;
     public static          Integer  port        = null;
     public static volatile String   icon        = null;
