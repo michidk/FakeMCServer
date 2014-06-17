@@ -146,7 +146,7 @@ public class Main
     {
         log.info("loading resources...");
 
-        //load servericon
+        // load servericon
         final String iconPath = "server-icon.png";
         final File serverIcon = new File(iconPath);
         if (!serverIcon.exists())
@@ -169,19 +169,19 @@ public class Main
             }
         }
 
-        //load version
+        // load version
         verText = parseColors(
             getFileString("version.txt")
         );
-        //load motd
+        // load motd
         motd = parseColors(
             getFileString("motd.txt")
         );
-        //kick message
+        // kick message
         kickMessage = parseColors(
             getFileString("kickmessage.txt")
         );
-        //players
+        // players
         {
             final String str = getFileString("players.txt");
             if(str != null)
@@ -196,10 +196,11 @@ public class Main
                 players = list.toArray(new String[0]);
             }
         }
-        //maxplayers
+        // maxplayers
         {
             final String str = getFileString("maxplayers.txt");
-            try {
+            try
+            {
                 maxPlayers = (str == null ? null : new Integer(Integer.parseInt(str)));
             }
             catch (NumberFormatException e)
@@ -214,8 +215,10 @@ public class Main
     private static String getFileString(final String fileName)
     {
         final File file = new File(fileName);
-        if(!file.isFile()) {
-            try {
+        if(!file.isFile())
+        {
+            try
+            {
                 file.createNewFile();
                 log.warning("created empty file '"+fileName+"'");
             }
@@ -226,12 +229,14 @@ public class Main
             }
             return null;
         }
-        if(!file.canRead()) {
+        if(!file.canRead())
+        {
             log.warning("file '"+fileName+"' not readable");
             return null;
         }
         final String str = FileHelper.stringFromFile(file);
-        if(str == null || str.isEmpty()) {
+        if(str == null || str.isEmpty())
+        {
             log.warning("file '"+fileName+"' is empty");
             return null;
         }
@@ -275,7 +280,9 @@ public class Main
 
             while(!server.isClosed())
             {
-               new ResponderThread(server.accept()).start();
+                new ResponderThread(
+                    server.accept()
+                ).start();
             }
 
         }
@@ -307,10 +314,11 @@ public class Main
     }
 
     private static Pattern colorPattern = Pattern.compile("&([0-9a-fk-or])");
-    public static String parseColors(final String message)
+    public static String parseColors(final String msg)
     {
-        if(message == null) return null;
-        return colorPattern.matcher(message).replaceAll("\u00a7$1");
+        if(msg == null) return null;
+        if(msg.isEmpty()) return "";
+        return colorPattern.matcher(msg).replaceAll("\u00a7$1");
     }
 
     public static void debug()
