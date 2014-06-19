@@ -97,6 +97,7 @@ public class Main
         log.addHandler(handler);
         log.setUseParentHandlers(false);
 
+        display_header();
         loadResources();
         addShutdownHook();
         startServer();
@@ -105,10 +106,9 @@ public class Main
 
     public static void display_header()
     {
-        System.out.println("==> FakeMCServer " + version + " by xxmicloxx and michidk <==");
-        System.out.println("Github: https://github.com/michidk/FakeMCServer");
-        System.out.println("YouTube: https://www.youtube.com/CodeBukkit");
-        System.out.println("-----------------------------------------------");
+        System.out.println("==> FakeMCServer " + version + " by xxmicloxx, lorenzop and michidk <==");
+        System.out.println("      Github: https://github.com/michidk/FakeMCServer");
+        System.out.println("------------------------------------------------------------");
         System.out.println();
     }
 
