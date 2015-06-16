@@ -10,7 +10,7 @@ A Fake MinecraftServer, that shows the following messages:
 You can customize all messages.
 
 Compile the .jar or download the compiled version here: https://mega.co.nz/#!ad1AUCKD!IDdb8dw8hCcy_r0InkkBK58OOEEuVEv_gNGt-L__QVk<br />
-the open cmd, goto the folder that contains the file (with cd), and run it with:<br />
+then open cmd, goto the folder that contains the file (with cd), and run it with:<br />
 java -jar FakeMCServer.jar -ip localhost -port 25565<br />
 (you can change the ip and port)<br />
 <br />
@@ -20,3 +20,7 @@ you can make new lines with '\n' for multiline motd, the playerlist and the kick
 you can use unicode: if you want to use special charakters, the convert to JavaScript Escapes (http://rishida.net/tools/conversion/)<br />
 
 Have fun ;)
+
+##NOTE
+I don't maintain this project anymore. Feel free to fork or and update your this project.<br />
+If you want to maintain and update this repo, just make a pull request and write me an email to michidk@live.de.
