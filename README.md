@@ -1,8 +1,6 @@
 FakeMCServer
 ============
 
-![Alt text](http://image-upload.de/image/fJMilM/4fe71c6994.png)
-
 A Fake MinecraftServer, that shows the following messages:
 * motd
 * version
