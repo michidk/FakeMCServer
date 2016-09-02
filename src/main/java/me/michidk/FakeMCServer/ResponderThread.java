@@ -178,7 +178,7 @@ public class ResponderThread extends Thread
         if (Main.maxPlayers == null)
         {
             sb.append(" \"players\": { \"max\": 0, \"online\": 0,");
-            sb.append(" \"sample\":[ {\"name\":\"\u0000\", \"id\":\"\u0000\"} ] },");
+            sb.append(" \"sample\":[] },");
         }
         else
         {
@@ -186,7 +186,7 @@ public class ResponderThread extends Thread
             sb.append(" \"players\": { \"max\": ").append(Main.maxPlayers).append(", \"online\": ");
             // no players online
             if (Main.players == null || Main.players.length == 0)
-                sb.append("0, \"sample\":[ {\"name\":\"\u0000\", \"id\":\"\u0000\"} ] },");
+                sb.append("0, \"sample\":[] },");
             else
             {
                 // players list
